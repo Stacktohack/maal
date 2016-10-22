@@ -275,6 +275,7 @@ def main():
     #optimize_portfolio(symbols, prices, allocs, start_val)
 
     email_content = plot_bolinger(symbols, start_date, end_date)
+    print "Email content", email_content
     gmail.send_mail(email_content)
     # email_script.mail_content(email_content)
 

@@ -10,7 +10,7 @@ def send_mail(content):
 
     mail.login('prashantsalerts@gmail.com', 'Alerting')
 
-    print "Content - ", content
+    print "mailing content - ", content
 
     if content is not None:
         print "****sending mail*****"
