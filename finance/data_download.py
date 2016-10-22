@@ -1,13 +1,15 @@
 import urllib
 import pandas as pd
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import scipy.optimize as spo
 import os.path
 import numpy as np
 import gmail
+from datetime import datetime
+from pytz import timezone
 
 
-def fetch_data(symbol): #Not in course. Adding (mgill)
+def fetch_data(symbol, yahoo_end_date): #Not in course. Adding (mgill)
     """ Downloads .csv files for <symbols> from Yahoo Finance and saves them in 'data' directory. These are later picked up by rese of the program."""
 
     '''url = "http://ichart.finance.yahoo.com/table.csv?s="+symbol+\
@@ -15,28 +17,30 @@ def fetch_data(symbol): #Not in course. Adding (mgill)
     '''
     time_frame = "m" # d -> daily, w -> weekly, m -> monthly.
     url = "http://real-chart.finance.yahoo.com/table.csv?s="+symbol+\
-            "&a=01&b=01&c=2014&d=21&e=10&f=2016&g="+time_frame+"+&ignore=.csv"
+            "&a=01&b=01&c=2014" + yahoo_end_date + "&g="+time_frame+"+&ignore=.csv"
 
     urllib.urlretrieve(url, './data/{}.csv'.format(symbol))
     print "DEBUG: Downloading for "+symbol
     print "DEBUG: URL:"+url
 
 
-def get_data_symbols(symbols):
+def get_data_symbols(symbols, yahoo_end_date):
     # Choose stock symbols to read
     # symbols = ['XLY', 'XLF','XLU','XLP','XLE','XLV','XLB','XLK','XLI']
 
     for symbol in symbols:
         file_path = './data/{}.csv'.format(symbol)
         if os.path.exists(file_path) == False:
-            fetch_data(symbol) #Download csv for symbol loading.
+            fetch_data(symbol, yahoo_end_date) #Download csv for symbol loading.
 
 
 def plot_df(frames):
-    for df in frames:
+    print "skip plot"
+    """
+    #for df in frames:
         df.plot()
     plt.show()
-
+    """
 
 def build_prices(symbols, start_date, end_date):
     print "Building prices dataset for ", symbols
@@ -234,19 +238,39 @@ def plot_bolinger(symbols, start_date, end_date):
     return email_content
 
 
+def clean_up(folder):
+    for the_file in os.listdir(folder):
+        file_path = os.path.join(folder, the_file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+                # elif os.path.isdir(file_path): shutil.rmtree(file_path)
+        except Exception as e:
+            print(e)
+    print "Cleaned up data folder"
+    return True
+
+
 def main():
     symbols = ['IBM', 'KRX', 'FB', 'GE', 'AAPL', 'NVDA', 'NKE', 'GOOGL', 'TSLA', 'AMZN', 'MSFT', 'TWTR']
-
+    clean_up('data')
     #symbols = ['SPY', 'GOOGL', 'FB']
     #allocs = [0.3, 0.4, 0.3]
     allocs = np.ones(len(symbols)) * 1/len(symbols)
     allocs = list(allocs)
     start_val = 100
-    get_data_symbols(symbols)
-    start_date = '2015-01-01'
-    end_date = '2016-10-21'
-    prices = build_prices(symbols, start_date, end_date)
 
+    start_date = '2015-01-01'
+    chi = timezone('US/Central')
+    chi_time = datetime.now(chi)
+    end_date = chi_time.strftime('%Y-%m-%d')
+    # end_date = '2016-10-21'
+    # prices = build_prices(symbols, start_date, end_date)
+    yahoo_end_date = chi_time.strftime('&d=%d&e=%m&f=%Y')
+
+    get_data_symbols(symbols, yahoo_end_date)
+
+    print end_date, yahoo_end_date
     #optimize_portfolio(symbols, prices, allocs, start_val)
 
     email_content = plot_bolinger(symbols, start_date, end_date)
