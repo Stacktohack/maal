@@ -175,7 +175,7 @@ def check_buying_point(symbol, df_base, tolerance):
             print "Buy missed by $", buy_miss
 
     if days >= 1:
-        content = "Buying point of {0}, prices rising from {1} days by {2} points \n".\
+        content = "Buying point of {0}, prices rising from {1} days by {2} points ".\
             format(symbol, days, price - prev_price)
         print content
         return content
@@ -204,7 +204,7 @@ def check_selling_point(symbol, df_base, tolerance):
             print "Sell missed by $", sell_miss
 
     if days >= 1:
-        content = "Selling point of {0}, prices dropping from {1} days by {2} points \n".\
+        content = "Selling point of {0}, prices dropping from {1} days by {2} points ".\
             format(symbol, days, prev_price - price)
         print content
         return content
