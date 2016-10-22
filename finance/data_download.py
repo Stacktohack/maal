@@ -254,7 +254,7 @@ def clean_up(folder):
 
 def main():
     symbols = ['IBM', 'KRX', 'FB', 'GE', 'AAPL', 'NVDA', 'NKE', 'GOOGL', 'TSLA', 'AMZN', 'MSFT', 'TWTR']
-    clean_up('data')
+    # clean_up('data')
     #symbols = ['SPY', 'GOOGL', 'FB']
     #allocs = [0.3, 0.4, 0.3]
     allocs = np.ones(len(symbols)) * 1/len(symbols)
