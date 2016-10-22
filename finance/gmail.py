@@ -15,6 +15,7 @@ def send_mail(content):
     if content is not None:
         print "****sending mail*****"
         mail.sendmail('prashantsalerts@gmail.com', 'prashantrdsoo@gmail.com', content)
+        print "sent"
     else:
         print "No mail sent"
 

@@ -7,6 +7,7 @@ import numpy as np
 import gmail
 from datetime import datetime
 from pytz import timezone
+import email_script
 
 
 def fetch_data(symbol, yahoo_end_date): #Not in course. Adding (mgill)
@@ -275,7 +276,7 @@ def main():
 
     email_content = plot_bolinger(symbols, start_date, end_date)
     gmail.send_mail(email_content)
-
+    # email_script.mail_content(email_content)
 
 if __name__ == "__main__":
     main()
