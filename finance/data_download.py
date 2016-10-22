@@ -235,7 +235,7 @@ def plot_bolinger(symbols, start_date, end_date):
         plot_df([df_base])
         buy_content += check_buying_point(symbol, df_base, tolerance)
         sell_content += check_selling_point(symbol, df_base, tolerance)
-    email_content = buy_content + "\n" + sell_content
+    email_content = "------BUY-------" + buy_content + "-----SELL------" + sell_content
     return email_content
 
 
