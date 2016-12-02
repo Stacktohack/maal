@@ -38,10 +38,11 @@ def get_data_symbols(symbols, yahoo_end_date):
 def plot_df(frames):
     print "skip plot"
     """
-    #for df in frames:
+    for df in frames:
         df.plot()
     plt.show()
     """
+
 
 def build_prices(symbols, start_date, end_date):
     print "Building prices dataset for ", symbols
@@ -126,11 +127,11 @@ def verify_prices(symbols, start_date, end_date, new_allocs, default_allocs, sta
 def bbands(price, length=20, numsd=2):
     """ returns average, upper band, and lower band"""
     average = pd.rolling_mean(price.resample("1D", fill_method="ffill"), length)
-    # plot_df([average])
+    plot_df([average])
     sd = pd.rolling_std(price.resample("1D", fill_method="ffill"), length)
     upper = average + (sd*numsd)
     lower = average - (sd*numsd)
-    return  [average, upper, lower]
+    return [average, upper, lower]
 
 
 def optimize_portfolio(symbols, prices, allocs, start_val):
@@ -162,8 +163,8 @@ def check_buying_point(symbol, df_base, tolerance):
     days = 0
     if price > (1-tolerance) * lower_price and price < (1+tolerance) * lower_price:
         prev_price = df_base.iloc[0, 0]
-        for i in range(1,100):
-            price = df_base.iloc[i,0]
+        for i in range(1, 100):
+            price = df_base.iloc[i, 0]
             if price < prev_price:
                 days += 1
                 prev_price = price
@@ -172,14 +173,17 @@ def check_buying_point(symbol, df_base, tolerance):
     else:
         buy_miss = min( abs((1-tolerance) * lower_price - price) , abs((1+tolerance) * lower_price - price) )
         if buy_miss < price * tolerance:
-            print "Buy missed by $", buy_miss
+            content = " Buy of {0} missed by ${1}".format(symbol, str(buy_miss))
+            print content
+            return content
 
     if days >= 1:
-        content = "Buying point of {0}, prices rising from {1} days by {2} points ".\
+        content = " ************ Buying point of {0}, prices rising from {1} days by {2} points ".\
             format(symbol, days, price - prev_price)
         print content
         return content
     else:
+        print "************", days, price
         return ""
 
 
@@ -190,8 +194,9 @@ def check_selling_point(symbol, df_base, tolerance):
     days = 0
     if price > (1-tolerance) * upper_price and price < (1+tolerance) * upper_price:
         prev_price = df_base.iloc[0, 0]
-        for i in range(1,100):
-            price = df_base.iloc[i,0]
+        for i in range(1, 100):
+
+            price = df_base.iloc[i, 0]
             if price > prev_price:
                 days += 1
                 prev_price = price
@@ -201,40 +206,43 @@ def check_selling_point(symbol, df_base, tolerance):
     else:
         sell_miss = min(abs((1-tolerance) * upper_price - price), abs((1+tolerance) * upper_price - price))
         if sell_miss < price * tolerance:
-            print "Sell missed by $", sell_miss
+            content = " Sell of {0} missed by $ {1}".format(symbol, str(sell_miss))
+            print content
+            return content
 
     if days >= 1:
-        content = "Selling point of {0}, prices dropping from {1} days by {2} points ".\
+        content = " **********Selling point of {0}, prices dropping from {1} days by {2} points ".\
             format(symbol, days, prev_price - price)
         print content
         return content
     else:
+        print "--------------", days, price
         return ""
 
 
 def plot_bolinger(symbols, start_date, end_date):
     tolerance = .01
     dates = pd.date_range(start_date, end_date)
-    df_base = pd.DataFrame(index=dates)
+    df_base_symbols = pd.DataFrame(index=dates)
     buy_content = ""
     sell_content = ""
     for symbol in symbols:
         print "Analysing ", symbol
-        df_base = pd.DataFrame(index=dates)
+        df_base_symbols = pd.DataFrame(index=dates)
         df_symbol = pd.read_csv('./data/{}.csv'.format(symbol), index_col="Date", parse_dates=True,
                                 usecols=['Date', 'Adj Close'], na_values=['nan'])
         df_symbol = df_symbol.rename(columns={'Adj Close': symbol})
-        df_base = df_base.join(df_symbol, how='inner')
-        price_sets = bbands(df_base)
+        df_base_symbols = df_base_symbols.join(df_symbol, how='inner')
+        price_avg_up_low_sets = bbands(df_base_symbols)
         labels = ['average', 'upper', 'lower']
         a = 0
-        for df in price_sets:
+        for df in price_avg_up_low_sets:
             df = df.rename(columns={symbol: symbol + labels[a]})
             a += 1
-            df_base = df_base.join(df, how='left')
-        plot_df([df_base])
-        buy_content = buy_content + check_buying_point(symbol, df_base, tolerance)
-        sell_content = sell_content + check_selling_point(symbol, df_base, tolerance)
+            df_base_symbols = df_base_symbols.join(df, how='left')
+        plot_df([df_base_symbols])
+        buy_content += check_buying_point(symbol, df_base_symbols, tolerance)
+        sell_content += check_selling_point(symbol, df_base_symbols, tolerance)
     email_content = "------BUY-------" + buy_content + "-----SELL------" + sell_content
     return email_content
 
@@ -253,8 +261,10 @@ def clean_up(folder):
 
 
 def main():
-    symbols = ['IBM', 'KRX', 'FB', 'GE', 'AAPL', 'NVDA', 'NKE', 'GOOGL', 'TSLA', 'AMZN', 'MSFT', 'TWTR']
-    # clean_up('data')
+    # symbols = ['IBM', 'KRX', 'FB', 'GE', 'AAPL', 'NVDA', 'NKE', 'GOOGL', 'TSLA', 'AMZN', 'MSFT', 'TWTR']
+    symbols = ['IBM', 'KRX', 'FB', 'GE', 'AAPL', 'NVDA', 'NKE', 'GOOGL', 'TSLA', 'AMZN', 'MSFT', 'TWTR', 'SPY', 'SAP',
+               'IBM', 'ORCL', 'WY', 'TXT', 'WDC', 'BAC', 'URBN', 'CSC', 'AMAT', 'SE', 'NEM', 'OKE']
+    clean_up('data')
     #symbols = ['SPY', 'GOOGL', 'FB']
     #allocs = [0.3, 0.4, 0.3]
     allocs = np.ones(len(symbols)) * 1/len(symbols)
@@ -267,7 +277,7 @@ def main():
     end_date = chi_time.strftime('%Y-%m-%d')
     # end_date = '2016-10-21'
     # prices = build_prices(symbols, start_date, end_date)
-    yahoo_end_date = chi_time.strftime('&d=%d&e=%m&f=%Y')
+    yahoo_end_date = chi_time.strftime('&d=%m&e=%d&f=%Y')
 
     get_data_symbols(symbols, yahoo_end_date)
 
@@ -280,4 +290,8 @@ def main():
     # email_script.mail_content(email_content)
 
 if __name__ == "__main__":
+    abspath = os.path.abspath(__file__)
+    dname = os.path.dirname(abspath)
+    os.chdir(dname)
     main()
+    
