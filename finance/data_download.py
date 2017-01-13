@@ -1,6 +1,6 @@
 import urllib
 import pandas as pd
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import scipy.optimize as spo
 import os.path
 import numpy as np
@@ -37,11 +37,11 @@ def get_data_symbols(symbols, yahoo_end_date):
 
 def plot_df(frames):
     print "skip plot"
-    """
+
     for df in frames:
         df.plot()
     plt.show()
-    """
+
 
 
 def build_prices(symbols, start_date, end_date):
@@ -263,7 +263,8 @@ def clean_up(folder):
 def main():
     # symbols = ['IBM', 'KRX', 'FB', 'GE', 'AAPL', 'NVDA', 'NKE', 'GOOGL', 'TSLA', 'AMZN', 'MSFT', 'TWTR']
     symbols = ['IBM', 'KRX', 'FB', 'GE', 'AAPL', 'NVDA', 'NKE', 'GOOGL', 'TSLA', 'AMZN', 'MSFT', 'TWTR', 'SPY', 'SAP',
-               'IBM', 'ORCL', 'WY', 'TXT', 'WDC', 'BAC', 'URBN', 'CSC', 'AMAT', 'SE', 'NEM', 'OKE']
+               'IBM', 'ORCL', 'WY', 'TXT', 'WDC', 'BAC', 'URBN', 'CSC', 'AMAT', 'SE', 'NEM', 'OKE', 'F', 'GM', 'CRM',
+               'YHOO', 'JPM']
     clean_up('data')
     #symbols = ['SPY', 'GOOGL', 'FB']
     #allocs = [0.3, 0.4, 0.3]
