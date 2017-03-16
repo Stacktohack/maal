@@ -264,7 +264,7 @@ def main():
     # symbols = ['IBM', 'KRX', 'FB', 'GE', 'AAPL', 'NVDA', 'NKE', 'GOOGL', 'TSLA', 'AMZN', 'MSFT', 'TWTR']
     symbols = ['IBM', 'KRX', 'FB', 'GE', 'AAPL', 'NVDA', 'NKE', 'GOOGL', 'TSLA', 'AMZN', 'MSFT', 'TWTR', 'SPY', 'SAP',
                'IBM', 'ORCL', 'WY', 'TXT', 'WDC', 'BAC', 'URBN', 'CSC', 'AMAT', 'SE', 'NEM', 'OKE', 'F', 'GM', 'CRM',
-               'YHOO', 'JPM']
+               'YHOO', 'JPM', 'BA', 'SNAP', 'GRUB']
     clean_up('data')
     #symbols = ['SPY', 'GOOGL', 'FB']
     #allocs = [0.3, 0.4, 0.3]
