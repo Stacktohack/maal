@@ -1,6 +1,6 @@
 import urllib
 import pandas as pd
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import scipy.optimize as spo
 import os.path
 import numpy as np
