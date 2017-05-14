@@ -127,7 +127,7 @@ def verify_prices(symbols, start_date, end_date, new_allocs, default_allocs, sta
 def bbands(price, length=20, numsd=2):
     """ returns average, upper band, and lower band"""
     average = pd.rolling_mean(price.resample("1D", fill_method="ffill"), length)
-    plot_df([average])
+    # plot_df([average])
     sd = pd.rolling_std(price.resample("1D", fill_method="ffill"), length)
     upper = average + (sd*numsd)
     lower = average - (sd*numsd)
@@ -240,7 +240,7 @@ def plot_bolinger(symbols, start_date, end_date):
             df = df.rename(columns={symbol: symbol + labels[a]})
             a += 1
             df_base_symbols = df_base_symbols.join(df, how='left')
-        plot_df([df_base_symbols])
+        # plot_df([df_base_symbols])
         buy_content += check_buying_point(symbol, df_base_symbols, tolerance)
         sell_content += check_selling_point(symbol, df_base_symbols, tolerance)
     email_content = "------BUY-------" + buy_content + "-----SELL------" + sell_content
